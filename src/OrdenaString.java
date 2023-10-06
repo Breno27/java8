@@ -1,8 +1,8 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class OrdenaString {
     public static void main(String[] args) {
@@ -11,33 +11,25 @@ public class OrdenaString {
         palavras.add("casa do codigo");
         palavras.add("caelum");
 
-        Comparator<String> comparador = new ComparadorPorTamanho();
-        //Collections.sort(palavras, comparador);
-        palavras.sort(comparador);
+        //palavras.sort((s1, s2) -> Integer.compare(s1.length(), s2.length()));
+
+        palavras.sort(Comparator.comparing(s -> s.length()));
+        palavras.sort(Comparator.comparing(String::length));
+
+        Function<String, Integer> funcao = String::length;
+        Function<String, Integer> funcao2 = s -> s.length();
+
+        Comparator<String> comparator = Comparator.comparing(funcao);
+        palavras.sort(comparator);
+
         System.out.println(palavras);
 
-//        for (String p : palavras) {
-//            System.out.println(p);
-//        }
+        Consumer<String> impressor = System.out::println;
+        palavras.forEach(impressor);
 
-        Consumer<String> consumidor = new ImprimeNaLinha();
-        palavras.forEach(consumidor);
+        palavras.forEach(System.out::println);
 
-    }
-}
+        new Thread(() -> System.out.println("Executando um Runnable")).start();
 
-class ImprimeNaLinha implements Consumer<String> {
-
-    @Override
-    public void accept(String s) {
-        System.out.println(s);
-    }
-}
-
-class ComparadorPorTamanho implements Comparator<String> {
-
-    @Override
-    public int compare(String s1, String s2) {
-        return s1.length() - s2.length();
     }
 }
